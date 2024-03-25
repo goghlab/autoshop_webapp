@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Import Firestore methods
 
 function SignUp({ onSignUpSuccess }) {
   const [email, setEmail] = useState('');
@@ -11,12 +10,20 @@ function SignUp({ onSignUpSuccess }) {
   const navigate = useNavigate();
 
   const auth = getAuth();
+  const db = getFirestore(); // Get Firestore instance
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log('User signed up successfully!');
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Add user data to Firestore upon successful sign-up
+      const usersCollectionRef = collection(db, 'Users');
+      const newUserDocRef = await addDoc(usersCollectionRef, { email: email, uid: userCredential.user.uid });
+      
+      console.log('User credential:', userCredential);
+      console.log('New user document ID:', newUserDocRef.id); // Log the ID of the newly created document
       setEmail('');
       setPassword('');
       setError(null);

@@ -8,6 +8,7 @@ import 'firebase/auth'; // Include Firebase authentication module
 import 'firebase/firestore'; // Include Firestore module
 import MyQRCode from './myqrCode';
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyCG5pVt5fXPgHUeqpsxbpTt702cg6leJKU",
   authDomain: "ei-website-103a4.firebaseapp.com",
@@ -18,6 +19,8 @@ const firebaseConfig = {
   appId: "1:609909198676:web:88fe2d7d886e6eb17202c1",
   measurementId: "G-HZQ5QYRXQX"
 };
+
+
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -29,9 +32,9 @@ function App() {
     <Router>
       <div>
         <Routes>
+          {/* Define routes */}
           <Route path="/signup" element={<SignUp />} /> 
           <Route path="/myqrcode" element={<MyQRCode />} /> 
-          {/* Define your routes here */}
         </Routes>
       </div>
     </Router>
