@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase Authentication methods
 
-function SignUp() {
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; 
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+
+function SignUp({ onSignUpSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const auth = getAuth(); // Get Firebase auth instance
+  const auth = getAuth();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      // Create user with email and password using Firebase authentication method
       await createUserWithEmailAndPassword(auth, email, password);
       console.log('User signed up successfully!');
-      // Reset form fields and error state
       setEmail('');
       setPassword('');
       setError(null);
+      navigate('/myqrcode'); // Redirect to /myqrcode on successful sign-up
     } catch (error) {
       setError(error.message);
       console.error('Error signing up:', error.message);
