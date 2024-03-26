@@ -24,7 +24,10 @@ function SignUp({ onSignUpSuccess }) {
       // Add user data to Firestore upon successful sign-up
       await setDoc(newUserDocRef, { 
         email: email, 
-        uid: userCredential.user.uid 
+        uid: userCredential.user.uid,
+        qrCode: userCredential.user.uid,
+        userId: userCredential.user.uid,
+        storeId: "OSP024"
       });
 
       console.log('User credential:', userCredential);
@@ -32,7 +35,7 @@ function SignUp({ onSignUpSuccess }) {
       setEmail('');
       setPassword('');
       setError(null);
-      navigate('/myqrcode'); // Redirect to /myqrcode on successful sign-up
+      navigate('/myqrcode', { state: { uid: userCredential.user.uid } }); // Pass the UID as a parameter
     } catch (error) {
       setError(error.message);
       console.error('Error signing up:', error.message);
@@ -96,6 +99,9 @@ function SignUp({ onSignUpSuccess }) {
 
       {/* Display error message if there's an error */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {/* Link to privacy policy */}
+      <p>註冊即表示您同意我們的 <a href="https://www.everything-intelligence.com/privacy" target="_blank" rel="noopener noreferrer">隱私政策</a></p>
 
       {/* Already have an account? */}
       <p>已經有帳戶了嗎？ <Link to="/login">立即登入</Link></p>
