@@ -7,7 +7,7 @@ import { getFirestore } from 'firebase/firestore';
 import 'firebase/auth'; // Include Firebase authentication module
 import 'firebase/firestore'; // Include Firestore module
 import MyQRCode from './myqrCode';
-
+import CartView from './cartView'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCG5pVt5fXPgHUeqpsxbpTt702cg6leJKU",
@@ -35,6 +35,7 @@ function App() {
           {/* Define routes */}
           <Route path="/signup" element={<SignUp />} /> 
           <Route path="/myqrcode" element={<MyQRCode />} /> 
+          <Route path="/CartView" element={<CartView />} /> 
         </Routes>
       </div>
     </Router>
