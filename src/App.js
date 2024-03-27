@@ -1,13 +1,15 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SignUp from './SignUp';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import 'firebase/auth'; // Include Firebase authentication module
 import 'firebase/firestore'; // Include Firestore module
+import { AuthProvider } from './AuthContext'; // Import AuthProvider
+import SignUp from './SignUp';
 import MyQRCode from './myqrCode';
-import CartView from './cartView'
+import CartView from './cartView';
+import CartDetailView from './cartDetailView';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCG5pVt5fXPgHUeqpsxbpTt702cg6leJKU",
@@ -36,6 +38,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} /> 
           <Route path="/myqrcode" element={<MyQRCode />} /> 
           <Route path="/CartView" element={<CartView />} /> 
+          <Route path="/cartDetailView" element={< CartDetailView />} /> 
+          <Route path="/cart-detail/:cartItemId" element={<CartDetailView />} />
         </Routes>
       </div>
     </Router>
@@ -43,6 +47,13 @@ function App() {
 }
 
 // Use createRoot().render() instead of createRoot() directly
-createRoot(document.getElementById('root')).render(<App />);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <AuthProvider> {/* Wrap your App component with AuthProvider */}
+      <App />
+    </AuthProvider>
+  </React.StrictMode>
+);
 
 export default App;

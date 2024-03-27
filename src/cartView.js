@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 function CartView() {
+  const { user } = useAuth();
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [unpaidCartTransactions, setUnpaidCartTransactions] = useState([]);
-  const uid = "c4YeICHbkZRMibNNf7DbQb1ceP02"; // Assuming you have a way to obtain the user's UID
 
   useEffect(() => {
-    console.log('UID:', uid); // Log the UID
-    if (uid) {
-      fetchUnpaidCartTransactions(uid);
+    if (user) {
+      fetchUnpaidCartTransactions(user.uid);
     }
-  }, [uid]);
+  }, [user]);
 
   const fetchUnpaidCartTransactions = async (uid) => {
     try {
@@ -30,25 +32,32 @@ function CartView() {
     }
   };
 
+  const handleTransactionItemClick = (cartItemId) => {
+    navigate(`/cart-detail/${cartItemId}`); // Use navigate to go to cart detail
+  };
+
   return (
     <div style={containerStyle}>
       <h1 style={titleStyle}>購物車</h1>
-      <p style={captionStyle}>以下是待結算的購物車列表，請在離開商店前結算。</p>
       <div style={transactionListStyle}>
         {unpaidCartTransactions.length > 0 ? (
           unpaidCartTransactions.map(transaction => (
-            <div key={transaction.id} style={cardStyle}>
+            <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction.id)}>
               <p style={cardTitleStyle}>購物車ID: {transaction.custom_id}</p>
               {/* Render other relevant information */}
             </div>
           ))
         ) : (
-          <p>找不到未支付的購物車</p>
+          <p>找不到未支付的購物車.</p>
         )}
       </div>
     </div>
   );
 }
+
+// Styles and export omitted for brevity
+
+
 
 const containerStyle = {
   display: 'flex',
