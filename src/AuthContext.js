@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth } from 'firebase/auth'; // Import auth object from Firebase authentication module
 
@@ -59,3 +58,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext };

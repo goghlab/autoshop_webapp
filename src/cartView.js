@@ -7,6 +7,7 @@ function CartView() {
   const { user } = useAuth();
   const navigate = useNavigate(); // Initialize useNavigate hook
   const [unpaidCartTransactions, setUnpaidCartTransactions] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     if (user) {
@@ -27,8 +28,10 @@ function CartView() {
       }));
 
       setUnpaidCartTransactions(unpaidTransactions);
+      setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching unpaid cart transactions:', error);
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
@@ -38,22 +41,29 @@ function CartView() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={titleStyle}>購物車</h1>
+      <h5 style={titleStyle}>我的購物車</h5>
       <div style={transactionListStyle}>
-        {unpaidCartTransactions.length > 0 ? (
-          unpaidCartTransactions.map(transaction => (
-            <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction.id)}>
-              <p style={cardTitleStyle}>購物車ID: {transaction.custom_id}</p>
-              {/* Render other relevant information */}
-            </div>
-          ))
+        {loading ? ( // Render loading animation if loading is true
+          <p>🛒購物車新增中...</p>
         ) : (
-          <p>找不到未支付的購物車.</p>
+          unpaidCartTransactions.length > 0 ? (
+            unpaidCartTransactions.map(transaction => (
+              <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction.id)}>
+                <p style={cardTitleStyle}>🛒購物車ID: {transaction.custom_id}</p>
+                {/* Render other relevant information */}
+              </div>
+            ))
+          ) : (
+            <p>找不到未支付的購物車.</p>
+          )
         )}
       </div>
     </div>
   );
 }
+
+// Styles and export omitted for brevity
+
 
 // Styles and export omitted for brevity
 
