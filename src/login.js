@@ -93,7 +93,7 @@ function Login() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* Link to sign up */}
-      <p>還沒有帳戶？ <Link to="/signup">立即註冊</Link></p>
+      <p>還沒有帳戶?？ <Link to="/signup">立即註冊</Link></p>
     </div>
   );
 }
