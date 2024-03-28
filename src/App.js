@@ -1,16 +1,19 @@
+// App.js
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import 'firebase/auth'; // Include Firebase authentication module
-import 'firebase/firestore'; // Include Firestore module
-import { AuthProvider } from './AuthContext'; // Import AuthProvider
+import 'firebase/auth';
+import 'firebase/firestore';
+import { AuthProvider } from './AuthContext';
 import SignUp from './SignUp';
-import MyQRCode from './myqrCode';
+import Login from './login';
+import MyQRCode from './myqrCode'; // Corrected filename
 import CartView from './cartView';
 import CartDetailView from './cartDetailView';
 
+// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCG5pVt5fXPgHUeqpsxbpTt702cg6leJKU",
   authDomain: "ei-website-103a4.firebaseapp.com",
@@ -22,11 +25,7 @@ const firebaseConfig = {
   measurementId: "G-HZQ5QYRXQX"
 };
 
-
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-
-// Initialize Firestore
 const db = getFirestore(firebaseApp);
 
 function App() {
@@ -34,11 +33,11 @@ function App() {
     <Router>
       <div>
         <Routes>
-          {/* Define routes */}
           <Route path="/signup" element={<SignUp />} /> 
+          <Route path="/login" element={<Login />} /> 
           <Route path="/myqrcode" element={<MyQRCode />} /> 
-          <Route path="/CartView" element={<CartView />} /> 
-          <Route path="/cartDetailView" element={< CartDetailView />} /> 
+          <Route path="/cartView" element={<CartView />} /> 
+          <Route path="/cartDetailView" element={<CartDetailView />} /> 
           <Route path="/cart-detail/:cartItemId" element={<CartDetailView />} />
         </Routes>
       </div>
@@ -46,14 +45,14 @@ function App() {
   );
 }
 
-// Use createRoot().render() instead of createRoot() directly
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider> {/* Wrap your App component with AuthProvider */}
+    <AuthProvider>
       <App />
     </AuthProvider>
   </React.StrictMode>
 );
 
 export default App;
+

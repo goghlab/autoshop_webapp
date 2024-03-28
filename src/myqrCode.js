@@ -1,7 +1,19 @@
+// MyQRCode.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 import QRCode from 'qrcode.react';
 import { useAuth } from './AuthContext';
+
+const buttonStyle = (isActive) => ({
+  padding: '10px 20px',
+  backgroundColor: isActive ? '#007AFF' : '#EEE',
+  color: isActive ? '#FFF' : '#000',
+  border: 'none',
+  cursor: 'pointer',
+  fontSize: '12px',
+  fontWeight: 'bold',
+  transition: 'background-color 0.3s',
+});
 
 function MyQRCode() {
   const { user } = useAuth();
@@ -32,12 +44,12 @@ function MyQRCode() {
       <h1 style={{ marginBottom: '20px', fontSize: '30px', fontWeight: 'bold' }}>我的QR碼</h1>
       <p style={{ marginBottom: '20px', fontSize: '14px', color: '#555' }}>掃碼進入無人便利店</p>
       <div style={{ marginBottom: '20px' }}>
-        {user && user.uid && <QRCode value={user.uid} size={260} />} {/* Use the UID of the authenticated user */}
+        {user && user.uid && <QRCode value={user.uid} size={260} />}
       </div>
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <button onClick={toggleQRCode} style={buttonStyle(isActiveQRCode)}>QR Code</button>
         <button onClick={togglePaymentHistory} style={buttonStyle(isActivePaymentHistory)}>付款記錄</button>
-        <Link to="/cartView"> {/* Navigate to CartView */}
+        <Link to="/cartView">
           <button onClick={toggleCart} style={buttonStyle(isActiveCart)}>購物車</button>
         </Link>
       </div>
@@ -60,16 +72,5 @@ const containerStyle = {
   minHeight: '100vh',
   textAlign: 'center',
 };
-
-const buttonStyle = (isActive) => ({
-  padding: '10px 20px',
-  backgroundColor: isActive ? '#007AFF' : '#EEE',
-  color: isActive ? '#FFF' : '#000',
-  border: 'none',
-  cursor: 'pointer',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  transition: 'background-color 0.3s',
-});
 
 export default MyQRCode;
