@@ -6,6 +6,7 @@ import { AuthContext } from './AuthContext';
 function CartDetailView() {
   const { cartItemId } = useParams();
   const { user } = useContext(AuthContext);
+  const [checkoutURL, setCheckoutURL] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -127,11 +128,7 @@ function CartDetailView() {
   
       // Ensure responseData is valid and contains checkout_url
       if (responseData && responseData.checkout_url) {
-        const checkoutURL = responseData.checkout_url;
-  
-        // Open the checkout URL in a new tab
-        window.open(checkoutURL, '_blank');
-  
+        setCheckoutURL(responseData.checkout_url);
         console.log('Payment initiation successful.');
       } else {
         throw new Error('Invalid response data');
@@ -141,7 +138,6 @@ function CartDetailView() {
       setError(error.message || 'An error occurred');
     }
   };  
-
 
   return (
     <div style={containerStyle}>
@@ -159,13 +155,15 @@ function CartDetailView() {
             ))}
           </div>
           <p style={{ ...detailStyle, marginTop: '20px' }}>總金額: {total !== null ? `HKD$ ${total}` : 'Calculating...'}</p>
+          {checkoutURL && <iframe src={checkoutURL} style={iframeStyle}></iframe>}
           <button style={payNowButtonStyle} onClick={handlePayNow}>立即支付</button>
+          <br></br>
+          <br></br>
         </>
       )}
     </div>
   );
 }
-
 
 function CartItemDetail({ item }) {
   const [price, setPrice] = useState(null);
@@ -213,7 +211,6 @@ function CartItemDetail({ item }) {
   );
 }
 
-
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -240,6 +237,12 @@ const itemsContainerStyle = {
 
 const detailStyle = {
   marginBottom: '10px',
+};
+
+const iframeStyle = {
+  width: '100%',
+  height: '500px', // Adjust height as needed
+  border: 'none',
 };
 
 const payNowButtonStyle = {
