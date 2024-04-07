@@ -166,12 +166,14 @@ function CartDetailView() {
   );
 }
 
+
 function CartItemDetail({ item }) {
   const [price, setPrice] = useState(null);
+  const [productName, setProductName] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPrice = async () => {
+    const fetchItemDetails = async () => {
       try {
         const db = getFirestore();
         const itemDoc = await getDoc(doc(db, '852items', item.upc));
@@ -179,17 +181,18 @@ function CartItemDetail({ item }) {
           const itemData = itemDoc.data();
           const price = parseFloat(itemData.price); // Convert price string to number
           setPrice(price);
+          setProductName(itemData.product);
         } else {
           console.error('Item not found for UPC:', item.upc);
         }
       } catch (error) {
-        console.error('Error fetching price for UPC:', item.upc, error);
+        console.error('Error fetching item details for UPC:', item.upc, error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPrice();
+    fetchItemDetails();
   }, [item]);
 
   const quantityAsNumber = parseInt(item.quantity);
@@ -198,6 +201,7 @@ function CartItemDetail({ item }) {
   return (
     <div style={{ ...detailStyle, borderBottom: '1px solid #ccc' }}>
       <p><strong>商品ID:</strong> {item.upc}</p>
+      <p><strong>商品名稱:</strong> {loading ? 'Loading...' : productName}</p>
       <p><strong>數量:</strong> {quantityAsNumber}</p>
       {loading ? (
         <p><strong>售價:</strong> Loading...</p>
@@ -208,6 +212,7 @@ function CartItemDetail({ item }) {
     </div>
   );
 }
+
 
 const containerStyle = {
   display: 'flex',
