@@ -8,13 +8,17 @@ function CartDetailView() {
   const { user } = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         if (!user) {
-          console.log('User not available, exiting...');
-          return;
+          throw new Error('User not available');
         }
 
         const db = getFirestore();
@@ -41,8 +45,11 @@ function CartDetailView() {
         }
 
         setCartItems(items);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching cart items:', error);
+        setError(error.message || 'An error occurred');
+        setLoading(false);
       }
     };
 
@@ -89,21 +96,72 @@ function CartDetailView() {
     }
   }, [cartItems]);
 
-  const handlePayNow = () => {
-    console.log('Payment processing...');
-  };
+  const handlePayNow = async () => {
+    try {
+      if (!user) {
+        throw new Error('User not logged in');
+      }
+  
+      const idToken = await user.getIdToken();
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      };
+      const requestBody = {
+        cartId: cartItemId,
+        totalAmount: total,
+      };
+  
+      const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to initiate payment: ${response.statusText}`);
+      }
+  
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+  
+      // Ensure responseData is valid and contains checkout_url
+      if (responseData && responseData.checkout_url) {
+        const checkoutURL = responseData.checkout_url;
+  
+        // Open the checkout URL in a new tab
+        window.open(checkoutURL, '_blank');
+  
+        console.log('Payment initiation successful.');
+      } else {
+        throw new Error('Invalid response data');
+      }
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      setError(error.message || 'An error occurred');
+    }
+  };  
+
 
   return (
     <div style={containerStyle}>
       <h2 style={titleStyle}>購物車詳情</h2>
       <p style={cartIdStyle}><strong>購物車ID:</strong> {cartItemId}</p>
-      <div style={itemsContainerStyle}>
-        {cartItems.map((item, index) => (
-          <CartItemDetail key={index} item={item} />
-        ))}
-      </div>
-      <p style={{ ...detailStyle, marginTop: '20px' }}>總金額: {total !== null ? `HKD$ ${total}` : 'Calculating...'}</p>
-      <button style={payNowButtonStyle} onClick={handlePayNow}>立即支付</button>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
+      ) : (
+        <>
+          <div style={itemsContainerStyle}>
+            {cartItems.map((item, index) => (
+              <CartItemDetail key={index} item={item} />
+            ))}
+          </div>
+          <p style={{ ...detailStyle, marginTop: '20px' }}>總金額: {total !== null ? `HKD$ ${total}` : 'Calculating...'}</p>
+          <button style={payNowButtonStyle} onClick={handlePayNow}>立即支付</button>
+        </>
+      )}
     </div>
   );
 }
@@ -130,7 +188,6 @@ function CartItemDetail({ item }) {
         setLoading(false);
       }
     };
-    
 
     fetchPrice();
   }, [item]);
