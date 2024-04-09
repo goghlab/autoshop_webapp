@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from './AuthContext'; // Import useAuth hook from AuthContext
+import logo from './777.png';
+import eiLogo from './eilogo.png'; // Import the image file
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -53,6 +55,14 @@ function Login() {
     textAlign: 'center',
   };
 
+  const logoStyle = {
+    position: 'absolute',
+    top: '20px', // Adjust as needed
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '200px', // Adjust the width as needed
+  };
+
   const inputStyle = {
     marginBottom: '20px',
     padding: '10px',
@@ -65,7 +75,10 @@ function Login() {
 
   return (
     <div style={containerStyle}>
-      <h1>歡迎來到 AutoShop</h1>
+      <img src={logo} alt="Logo" style={logoStyle} /> 
+      <br></br>
+      <br></br>
+      <h2>歡迎來到 777士多</h2>
       <p>登入帳戶: 輸入您的電子郵件和密碼以登入。</p>
 
       {/* Login form */}
@@ -86,7 +99,7 @@ function Login() {
           style={inputStyle}
         />
         <br />
-        <button style={buttonStyle} type="submit">Login</button>
+        <button style={buttonStyle} type="submit">立即登入</button>
       </form>
 
       {/* Display error message if there's an error */}
@@ -94,6 +107,12 @@ function Login() {
 
       {/* Link to sign up */}
       <p>還沒有帳戶?？ <Link to="/signup">立即註冊</Link></p>
+       {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
+       <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE . 萬智科技 2024 All rights reserved</p>
+
+   {/* Add the image with smaller size */}
+<img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
+
     </div>
   );
 }

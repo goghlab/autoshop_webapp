@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; 
 import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 import logo from './777.png';
+import eiLogo from './eilogo.png'; // Import the image file
 
 function SignUp({ onSignUpSuccess }) {
   const [email, setEmail] = useState('');
@@ -82,9 +83,11 @@ function SignUp({ onSignUpSuccess }) {
 
   return (
     <div style={containerStyle}>
-       <br></br>
+      <br />
       <img src={logo} alt="Logo" style={logoStyle} /> 
-      <br></br>
+      <br />
+       <br /> <br />
+       <br /> <br />
       <h2>歡迎來到777士多</h2>
       <p>建立帳戶: 輸入您的電子郵件和密碼以註冊。</p>
 
@@ -117,6 +120,13 @@ function SignUp({ onSignUpSuccess }) {
 
       {/* Already have an account? */}
       <p>已經有帳戶了嗎？ <Link to="/login">立即登入</Link></p>
+
+      {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
+      <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE . 萬智科技 2024 All rights reserved</p>
+
+{/* Add the image with smaller size */}
+<img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
+
     </div>
   );
 }
