@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; 
 import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+import logo from './777.png';
 
 function SignUp({ onSignUpSuccess }) {
   const [email, setEmail] = useState('');
@@ -61,6 +62,14 @@ function SignUp({ onSignUpSuccess }) {
     textAlign: 'center',
   };
 
+  const logoStyle = {
+    position: 'absolute',
+    top: '20px', // Adjust as needed
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '200px', // Adjust the width as needed
+  };
+
   const inputStyle = {
     marginBottom: '20px',
     padding: '10px',
@@ -73,7 +82,10 @@ function SignUp({ onSignUpSuccess }) {
 
   return (
     <div style={containerStyle}>
-      <h1>歡迎來到 AutoShop</h1>
+       <br></br>
+      <img src={logo} alt="Logo" style={logoStyle} /> 
+      <br></br>
+      <h2>歡迎來到777士多</h2>
       <p>建立帳戶: 輸入您的電子郵件和密碼以註冊。</p>
 
       {/* Sign-up form */}
@@ -94,7 +106,7 @@ function SignUp({ onSignUpSuccess }) {
           style={inputStyle}
         />
         <br />
-        <button style={buttonStyle} type="submit">Sign Up</button>
+        <button style={buttonStyle} type="submit">立即登記</button>
       </form>
 
       {/* Display error message if there's an error */}
