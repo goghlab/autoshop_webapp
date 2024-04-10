@@ -122,7 +122,7 @@ function SignUp({ onSignUpSuccess }) {
       <p>已經有帳戶了嗎？ <Link to="/login">立即登入</Link></p>
 
       {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
-      <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE . 萬智科技 2024 All rights reserved</p>
+      <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE  萬智科技 2024 All rights reserved</p>
 
 {/* Add the image with smaller size */}
 <img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />

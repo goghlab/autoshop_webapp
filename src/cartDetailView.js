@@ -128,7 +128,8 @@ function CartDetailView() {
   
       // Ensure responseData is valid and contains checkout_url
       if (responseData && responseData.checkout_url) {
-        setCheckoutURL(responseData.checkout_url);
+        // Redirect to checkout_url
+        window.location.href = responseData.checkout_url;
         console.log('Payment initiation successful.');
       } else {
         throw new Error('Invalid response data');
@@ -137,7 +138,7 @@ function CartDetailView() {
       console.error('Error initiating payment:', error);
       setError(error.message || 'An error occurred');
     }
-  };  
+  };   
 
   return (
     <div style={containerStyle}>

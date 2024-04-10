@@ -3,6 +3,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
+
 function CartView() {
   const { user } = useAuth();
   const navigate = useNavigate(); // Initialize useNavigate hook
