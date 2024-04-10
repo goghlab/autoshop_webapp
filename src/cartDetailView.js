@@ -96,40 +96,48 @@ function CartDetailView() {
       calculateTotal();
     }
   }, [cartItems]);
-
+ 
   const handlePayNow = async () => {
     try {
-      if (!user) {
-        throw new Error('User not logged in');
-      }
-  
+      // Obtain user's ID token from Firebase Authentication
       const idToken = await user.getIdToken();
+      
+      // Set headers including Authorization and Referer
       const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${idToken}`,
+        'Referer': 'https://payment.everything-intelligence.com',
       };
+  
+      // Prepare request body
       const requestBody = {
         cartId: cartItemId,
         totalAmount: total,
       };
   
+      // Send request to initiate payment
       const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(requestBody),
       });
   
+      // Handle response
       if (!response.ok) {
         throw new Error(`Failed to initiate payment: ${response.statusText}`);
       }
   
+      // Parse response data
       const responseData = await response.json();
       console.log('Response Data:', responseData);
   
       // Ensure responseData is valid and contains checkout_url
       if (responseData && responseData.checkout_url) {
-        // Redirect to checkout_url
-        window.location.href = responseData.checkout_url;
+        // Construct the checkout URL with the Referer header as a URL parameter
+        const checkoutURLWithReferer = `${responseData.checkout_url}?referer=${encodeURIComponent(headers.Referer)}`;
+        
+        // Open the checkout URL in a new tab
+        window.open(checkoutURLWithReferer, '_blank', `noopener,noreferrer`);
         console.log('Payment initiation successful.');
       } else {
         throw new Error('Invalid response data');
@@ -138,7 +146,8 @@ function CartDetailView() {
       console.error('Error initiating payment:', error);
       setError(error.message || 'An error occurred');
     }
-  };   
+  };
+    
 
   return (
     <div style={containerStyle}>

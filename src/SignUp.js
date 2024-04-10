@@ -86,6 +86,7 @@ function SignUp({ onSignUpSuccess }) {
       <br />
       <img src={logo} alt="Logo" style={logoStyle} /> 
       <br />
+      <br />  <br />
        <p style={{ color: 'white' }}>歡迎來到 777士多</p>
       <p>建立帳戶: 輸入您的電子郵件和密碼以註冊。</p>
  
