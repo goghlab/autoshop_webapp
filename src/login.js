@@ -61,6 +61,7 @@ function Login() {
     left: '50%',
     transform: 'translateX(-50%)',
     width: '200px', // Adjust the width as needed
+    marginBottom: '20px auto',
   };
 
   const inputStyle = {
