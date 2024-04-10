@@ -86,11 +86,9 @@ function SignUp({ onSignUpSuccess }) {
       <br />
       <img src={logo} alt="Logo" style={logoStyle} /> 
       <br />
-       <br /> <br />
-       <br /> <br />
-      <p>歡迎來到777士多</p>
+       <p style={{ color: 'white' }}>歡迎來到 777士多</p>
       <p>建立帳戶: 輸入您的電子郵件和密碼以註冊。</p>
-
+ 
       {/* Sign-up form */}
       <form onSubmit={handleSignUp}>
         <input

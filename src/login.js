@@ -77,9 +77,7 @@ function Login() {
   return (
     <div style={containerStyle}>
       <img src={logo} alt="Logo" style={logoStyle} /> 
-      <br></br>
-      <br></br>
-      <p>歡迎來到 777士多</p>
+      <p style={{ color: 'white' }}>歡迎來到 777士多</p>
       <p>登入帳戶: 輸入您的電子郵件和密碼以登入。</p>
 
       {/* Login form */}
