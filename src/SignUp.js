@@ -88,7 +88,7 @@ function SignUp({ onSignUpSuccess }) {
       <br />
        <br /> <br />
        <br /> <br />
-      <h2>歡迎來到777士多</h2>
+      <p>歡迎來到777士多</p>
       <p>建立帳戶: 輸入您的電子郵件和密碼以註冊。</p>
 
       {/* Sign-up form */}
