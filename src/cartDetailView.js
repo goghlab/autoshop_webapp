@@ -157,10 +157,10 @@ function CartDetailView() {
   
   const handlePayNow = async () => {
     try {
-      // Obtain checkout URL
+      // get checkout URL
       const checkoutURL = await initiatePaymentAndGetCheckoutURL();
     
-      // Set the correct referer URL
+      // Set referer URL
       const refererURL = 'https://autoshopwebapp.vercel.app/';
     
       // Open the checkout URL in a new window with the referer header set
