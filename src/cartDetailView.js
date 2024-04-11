@@ -102,17 +102,17 @@ function CartDetailView() {
       // Obtain user's ID token from Firebase Authentication
       const idToken = await user.getIdToken();
       
-      // Set headers including Authorization and Referer
+      // Set headers including Authorization
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`,
-        'Referer': 'https://payment.everything-intelligence.com',
       };
   
       // Prepare request body
       const requestBody = {
         cartId: cartItemId,
         totalAmount: total,
+        referer: 'https://payment.everything-intelligence.com', 
       };
   
       // Send request to initiate payment
@@ -133,21 +133,24 @@ function CartDetailView() {
   
       // Ensure responseData is valid and contains checkout_url
       if (responseData && responseData.checkout_url) {
-        // Construct the checkout URL with the Referer header as a URL parameter
-        const checkoutURLWithReferer = `${responseData.checkout_url}?referer=${encodeURIComponent(headers.Referer)}`;
-        
-        // Open the checkout URL in a new tab
-        window.open(checkoutURLWithReferer, '_blank', `noopener,noreferrer`);
+        // Append referer to the checkout URL
+        const checkoutURLWithReferer = `${responseData.checkout_url}?referer=${encodeURIComponent('https://payment.everything-intelligence.com')}`;
+  
+        // Navigate to the checkout URL in the same window
+        window.location.href = checkoutURLWithReferer;
+  
         console.log('Payment initiation successful.');
       } else {
         throw new Error('Invalid response data');
       }
     } catch (error) {
-      console.error('Error initiating payment:', error);
-      setError(error.message || 'An error occurred');
+      console.error('Error:', error);
+      // Handle the error here, or you can rethrow it to propagate it further
+      throw error;
     }
   };
-    
+  
+  
 
   return (
     <div style={containerStyle}>
