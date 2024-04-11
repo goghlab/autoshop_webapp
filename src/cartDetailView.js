@@ -96,57 +96,84 @@ function CartDetailView() {
       calculateTotal();
     }
   }, [cartItems]);
- 
+
+  const openCheckoutURLWithReferer = (checkoutURL, refererURL) => {
+    // Append the referer to the checkout URL
+    const checkoutURLWithReferer = `${checkoutURL}?referer=${encodeURIComponent(refererURL)}`;
+  
+    // Open the checkout URL in a new window
+    window.open(checkoutURLWithReferer, '_blank');
+    console.log('Payment initiation successful.');
+  };
+  
+  const initiatePaymentAndGetCheckoutURL = async () => {
+    try {
+      // Obtain user's ID token from Firebase Authentication
+      const idToken = await user.getIdToken();
+  
+      // Define the correct referer URL
+      const refererURL = 'https://payment.everything-intelligence.com';
+  
+      // Set headers including Authorization and Referer
+      const headers = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`,
+        'Referer': refererURL,
+      });
+  
+      // Prepare request body
+      const requestBody = {
+        cartId: cartItemId,
+        totalAmount: total,
+      };
+  
+      // Send request to initiate payment
+      const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+  
+      // Handle response
+      if (!response.ok) {
+        throw new Error(`Failed to initiate payment: ${response.statusText}`);
+      }
+  
+      // Parse response data
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+  
+      // Ensure responseData is valid and contains checkout_url
+      if (responseData && responseData.checkout_url) {
+        return responseData.checkout_url;
+      } else {
+        throw new Error('Invalid response data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };  
+  
   const handlePayNow = async () => {
     try {
-        // Obtain user's ID token from Firebase Authentication
-        const idToken = await user.getIdToken();
-
-        // Set headers including Authorization and Referer
-        const headers = new Headers({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`,
-            'Referer': 'https://payment.everything-intelligence.com',
-        });
-
-        // Prepare request body
-        const requestBody = {
-            cartId: cartItemId,
-            totalAmount: total,
-        };
-
-        // Send request to initiate payment
-        const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(requestBody),
-        });
-
-        // Handle response
-        if (!response.ok) {
-            throw new Error(`Failed to initiate payment: ${response.statusText}`);
-        }
-
-        // Parse response data
-        const responseData = await response.json();
-        console.log('Response Data:', responseData);
-
-        // Ensure responseData is valid and contains checkout_url
-        if (responseData && responseData.checkout_url) {
-            // Open the checkout URL in a new window
-            window.open(responseData.checkout_url, '_blank');
-            console.log('Payment initiation successful.');
-        } else {
-            throw new Error('Invalid response data');
-        }
+      // Obtain checkout URL
+      const checkoutURL = await initiatePaymentAndGetCheckoutURL();
+    
+      // Set the correct referer URL
+      const refererURL = 'https://autoshopwebapp.vercel.app/';
+    
+      // Open the checkout URL in a new window with the referer header set
+      openCheckoutURLWithReferer(checkoutURL, refererURL);
     } catch (error) {
-        console.error('Error:', error);
-        // Handle the error here, or you can rethrow it to propagate it further
-        throw error;
+      console.error('Error handling payment:', error);
+      throw error;
     }
-};
+  };
   
-
+  
+  
+  
   return (
     <div style={containerStyle}>
       <h2 style={titleStyle}>購物車詳情</h2>
