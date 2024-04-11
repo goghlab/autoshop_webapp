@@ -99,57 +99,52 @@ function CartDetailView() {
  
   const handlePayNow = async () => {
     try {
-      // Obtain user's ID token from Firebase Authentication
-      const idToken = await user.getIdToken();
-      
-      // Set headers including Authorization
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`,
-      };
-  
-      // Prepare request body
-      const requestBody = {
-        cartId: cartItemId,
-        totalAmount: total,
-        referer: 'https://payment.everything-intelligence.com', 
-      };
-  
-      // Send request to initiate payment
-      const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(requestBody),
-      });
-  
-      // Handle response
-      if (!response.ok) {
-        throw new Error(`Failed to initiate payment: ${response.statusText}`);
-      }
-  
-      // Parse response data
-      const responseData = await response.json();
-      console.log('Response Data:', responseData);
-  
-      // Ensure responseData is valid and contains checkout_url
-      if (responseData && responseData.checkout_url) {
-        // Append referer to the checkout URL
-        const checkoutURLWithReferer = `${responseData.checkout_url}?referer=${encodeURIComponent('https://payment.everything-intelligence.com')}`;
-  
-        // Navigate to the checkout URL in the same window
-        window.location.href = checkoutURLWithReferer;
-  
-        console.log('Payment initiation successful.');
-      } else {
-        throw new Error('Invalid response data');
-      }
+        // Obtain user's ID token from Firebase Authentication
+        const idToken = await user.getIdToken();
+
+        // Set headers including Authorization and Referer
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`,
+            'Referer': 'https://payment.everything-intelligence.com',
+        });
+
+        // Prepare request body
+        const requestBody = {
+            cartId: cartItemId,
+            totalAmount: total,
+        };
+
+        // Send request to initiate payment
+        const response = await fetch('https://payment.everything-intelligence.com/initiate-payment', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestBody),
+        });
+
+        // Handle response
+        if (!response.ok) {
+            throw new Error(`Failed to initiate payment: ${response.statusText}`);
+        }
+
+        // Parse response data
+        const responseData = await response.json();
+        console.log('Response Data:', responseData);
+
+        // Ensure responseData is valid and contains checkout_url
+        if (responseData && responseData.checkout_url) {
+            // Open the checkout URL in a new window
+            window.open(responseData.checkout_url, '_blank');
+            console.log('Payment initiation successful.');
+        } else {
+            throw new Error('Invalid response data');
+        }
     } catch (error) {
-      console.error('Error:', error);
-      // Handle the error here, or you can rethrow it to propagate it further
-      throw error;
+        console.error('Error:', error);
+        // Handle the error here, or you can rethrow it to propagate it further
+        throw error;
     }
-  };
-  
+};
   
 
   return (
