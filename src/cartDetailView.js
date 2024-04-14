@@ -17,43 +17,36 @@ function CartDetailView() {
       try {
         setLoading(true);
         setError(null);
-
+    
         if (!user) {
           throw new Error('User not available');
         }
-
+    
         const db = getFirestore();
         const userRef = doc(db, 'Users', user.uid);
-        const cartTransactionsQuery = query(collection(userRef, 'cartTransactions'));
-        const querySnapshot = await getDocs(cartTransactionsQuery);
-
-        const items = [];
-
-        for (const doc of querySnapshot.docs) {
-          const transactionData = doc.data();
-          for (const item of transactionData.items) {
-            const existingItem = items.find(i => i.upc === item.upc);
-            if (!existingItem) {
-              items.push({
-                upc: item.upc,
-                quantity: item.qty,
-                subtotal: 0
-              });
-            } else {
-              existingItem.quantity += item.qty;
-            }
-          }
+        const cartTransactionDocRef = doc(collection(userRef, 'cartTransactions'), cartItemId);
+        const cartTransactionDocSnapshot = await getDoc(cartTransactionDocRef);
+    
+        if (cartTransactionDocSnapshot.exists()) {
+          const cartTransactionData = cartTransactionDocSnapshot.data();
+          const cartItems = cartTransactionData.items.map(item => ({
+            upc: item.upc,
+            quantity: item.qty,
+            subtotal: 0 // You can calculate subtotal if needed
+          }));
+    
+          setCartItems(cartItems);
+          setLoading(false);
+        } else {
+          throw new Error('Cart transaction document not found');
         }
-
-        setCartItems(items);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching cart items:', error);
         setError(error.message || 'An error occurred');
         setLoading(false);
       }
     };
-
+    
     fetchCartItems();
   }, [cartItemId, user]);
 
