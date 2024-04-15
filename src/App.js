@@ -11,6 +11,7 @@ import SignUp from './SignUp';
 import Login from './login';
 import MyQRCode from './myqrCode'; // Corrected filename
 import CartView from './cartView';
+import PaymentHistory from './paymentHistory';
 import CartDetailView from './cartDetailView';
 
 // Initialize Firebase
@@ -37,6 +38,7 @@ function App() {
           <Route path="/login" element={<Login />} /> 
           <Route path="/myqrcode" element={<MyQRCode />} /> 
           <Route path="/cartView" element={<CartView />} /> 
+          <Route path="/paymentHistory" element={<PaymentHistory />} /> 
           <Route path="/cartDetailView" element={<CartDetailView />} /> 
           <Route path="/cart-detail/:cartItemId" element={<CartDetailView />} />
         </Routes>

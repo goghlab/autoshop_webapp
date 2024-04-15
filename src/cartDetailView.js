@@ -17,24 +17,24 @@ function CartDetailView() {
       try {
         setLoading(true);
         setError(null);
-    
+  
         if (!user) {
           throw new Error('User not available');
         }
-    
+  
         const db = getFirestore();
         const userRef = doc(db, 'Users', user.uid);
         const cartTransactionDocRef = doc(collection(userRef, 'cartTransactions'), cartItemId);
         const cartTransactionDocSnapshot = await getDoc(cartTransactionDocRef);
-    
+  
         if (cartTransactionDocSnapshot.exists()) {
           const cartTransactionData = cartTransactionDocSnapshot.data();
-          const cartItems = cartTransactionData.items.map(item => ({
+          const cartItems = cartTransactionData.items.filter(item => !item.paid).map(item => ({
             upc: item.upc,
             quantity: item.qty,
             subtotal: 0 // You can calculate subtotal if needed
           }));
-    
+  
           setCartItems(cartItems);
           setLoading(false);
         } else {
@@ -46,10 +46,10 @@ function CartDetailView() {
         setLoading(false);
       }
     };
-    
+  
     fetchCartItems();
   }, [cartItemId, user]);
-
+  
   useEffect(() => {
     const calculateSubtotals = async () => {
       try {

@@ -1,8 +1,8 @@
-// MyQRCode.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import QRCode from 'qrcode.react';
 import { useAuth } from './AuthContext';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 const buttonStyle = (isActive) => ({
   padding: '10px 20px',
@@ -17,9 +17,29 @@ const buttonStyle = (isActive) => ({
 
 function MyQRCode() {
   const { user } = useAuth();
+  const [paidItems, setPaidItems] = useState([]);
   const [isActiveQRCode, setIsActiveQRCode] = useState(true);
   const [isActivePaymentHistory, setIsActivePaymentHistory] = useState(false);
   const [isActiveCart, setIsActiveCart] = useState(false);
+
+  useEffect(() => {
+    const fetchPaidItems = async () => {
+      if (!user || !user.uid) return;
+
+      const db = getFirestore();
+      const q = query(collection(db, 'payments'), where('userId', '==', user.uid), where('paid', '==', true));
+      
+      const querySnapshot = await getDocs(q);
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      
+      setPaidItems(items);
+    };
+
+    fetchPaidItems();
+  }, [user]);
 
   const toggleQRCode = () => {
     setIsActiveQRCode(true);
@@ -48,18 +68,19 @@ function MyQRCode() {
       </div>
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <button onClick={toggleQRCode} style={buttonStyle(isActiveQRCode)}>QR Code</button>
-        <button onClick={togglePaymentHistory} style={buttonStyle(isActivePaymentHistory)}>付款記錄</button>
+        <Link to="/paymentHistory">
+          <button onClick={togglePaymentHistory} style={buttonStyle(isActivePaymentHistory)}>付款記錄</button>
+        </Link>
         <Link to="/cartView">
           <button onClick={toggleCart} style={buttonStyle(isActiveCart)}>購物車</button>
         </Link>
       </div>
 
-      {isActivePaymentHistory && (
-        <p>Payment history content goes here...</p>
-      )}
-      {isActiveCart && (
-        <p>Cart content goes here...</p>
-      )}
+      <div>
+        {isActivePaymentHistory && paidItems.map(item => (
+          <p key={item.id}>{item.name}: ${item.price}</p>
+        ))}
+      </div>
     </div>
   );
 }

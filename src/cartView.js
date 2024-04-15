@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-
+import { FaSync } from 'react-icons/fa'; // Import the refresh icon
 
 function CartView() {
   const { user } = useAuth();
@@ -40,6 +40,13 @@ function CartView() {
     navigate(`/cart-detail/${cartItemId}`); // Use navigate to go to cart detail
   };
 
+  const handleRefresh = () => {
+    setLoading(true); // Set loading to true before fetching data
+    if (user) {
+      fetchUnpaidCartTransactions(user.uid);
+    }
+  };
+
   return (
     <div style={containerStyle}>
       <h5 style={titleStyle}>我的購物車</h5>
@@ -59,17 +66,12 @@ function CartView() {
           )
         )}
       </div>
+      <button style={refreshButtonStyle} onClick={handleRefresh}><FaSync /></button>
     </div>
   );
 }
 
-// Styles and export omitted for brevity
-
-
-// Styles and export omitted for brevity
-
-
-
+// Styles
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -108,6 +110,21 @@ const cardTitleStyle = {
   marginBottom: '10px',
   fontSize: '18px',
   fontWeight: 'bold',
+};
+
+const refreshButtonStyle = {
+  backgroundColor: '#007AFF', // Blue color
+  borderRadius: '50%', // Make the button round
+  width: '40px',
+  height: '40px',
+  border: 'none',
+  cursor: 'pointer',
+  marginTop: '20px',
+  marginBottom: '20px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: 'white', // Set the color of the icon to white
 };
 
 export default CartView;
