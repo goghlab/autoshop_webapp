@@ -13,6 +13,7 @@ import MyQRCode from './myqrCode'; // Corrected filename
 import CartView from './cartView';
 import PaymentHistory from './paymentHistory';
 import CartDetailView from './cartDetailView';
+import TermsPage from './TermsPage';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/paymentHistory" element={<PaymentHistory />} /> 
           <Route path="/cartDetailView" element={<CartDetailView />} /> 
           <Route path="/cart-detail/:cartItemId" element={<CartDetailView />} />
+          <Route exact path="/terms" element={<TermsPage />} />
         </Routes>
       </div>
     </Router>

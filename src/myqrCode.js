@@ -4,16 +4,18 @@ import QRCode from 'qrcode.react';
 import { useAuth } from './AuthContext';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
-const buttonStyle = (isActive) => ({
-  padding: '10px 20px',
-  backgroundColor: isActive ? '#007AFF' : '#EEE',
-  color: isActive ? '#FFF' : '#000',
-  border: 'none',
+const buttonStyle = {
+  fontSize: '15px',
+  marginTop: '20px',
   cursor: 'pointer',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  transition: 'background-color 0.3s',
-});
+  outline: 'none', // Remove button outline
+};
+
+const blueButtonStyle = {
+  ...buttonStyle,
+  backgroundColor: '#0078FA',
+  color: 'white',
+};
 
 function MyQRCode() {
   const { user } = useAuth();
@@ -67,12 +69,12 @@ function MyQRCode() {
         {user && user.uid && <QRCode value={user.uid} size={260} />}
       </div>
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <button onClick={toggleQRCode} style={buttonStyle(isActiveQRCode)}>QR Code</button>
+        <button onClick={toggleQRCode} style={isActiveQRCode ? blueButtonStyle : buttonStyle}>QR Code</button>
         <Link to="/paymentHistory">
-          <button onClick={togglePaymentHistory} style={buttonStyle(isActivePaymentHistory)}>付款記錄</button>
+          <button onClick={togglePaymentHistory} style={isActivePaymentHistory ? blueButtonStyle : buttonStyle}>付款記錄</button>
         </Link>
         <Link to="/cartView">
-          <button onClick={toggleCart} style={buttonStyle(isActiveCart)}>購物車</button>
+          <button onClick={toggleCart} style={isActiveCart ? blueButtonStyle : buttonStyle}>購物車</button>
         </Link>
       </div>
 
@@ -81,6 +83,10 @@ function MyQRCode() {
           <p key={item.id}>{item.name}: ${item.price}</p>
         ))}
       </div>
+
+      <Link to="/terms" style={{ textDecoration: 'none' }}>
+        <p style={buttonStyle}>條款及細則</p>
+      </Link>
     </div>
   );
 }
