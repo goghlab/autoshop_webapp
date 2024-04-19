@@ -83,10 +83,6 @@ function MyQRCode() {
           <p key={item.id}>{item.name}: ${item.price}</p>
         ))}
       </div>
-
-      <Link to="/terms" style={{ textDecoration: 'none' }}>
-        <p style={buttonStyle}>條款及細則</p>
-      </Link>
     </div>
   );
 }
