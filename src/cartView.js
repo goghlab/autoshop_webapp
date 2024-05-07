@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { FaSync } from 'react-icons/fa'; // Import the refresh icon
+
 
 function CartView() {
   const { user } = useAuth();
@@ -20,25 +21,57 @@ function CartView() {
     try {
       const db = getFirestore();
       const cartTransactionsRef = collection(db, 'Users', uid, 'cartTransactions');
-      const q = query(cartTransactionsRef, where('paid', '==', false));
-      const querySnapshot = await getDocs(q);
-
-      const unpaidTransactions = querySnapshot.docs.map(doc => ({
+      const emptyCartTransactionsRef = collection(db, 'Users', uid, 'emptyCartTransactions');
+  
+      const cartQuery = query(cartTransactionsRef, where('paid', '==', false));
+      const emptyCartQuery = query(emptyCartTransactionsRef);
+  
+      const [cartSnapshot, emptyCartSnapshot] = await Promise.all([
+        getDocs(cartQuery),
+        getDocs(emptyCartQuery)
+      ]);
+  
+      const unpaidCartTransactions = cartSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-
-      setUnpaidCartTransactions(unpaidTransactions);
+  
+      const emptyCartTransactions = emptyCartSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+  
+      const allTransactions = unpaidCartTransactions.concat(emptyCartTransactions);
+  
+      setUnpaidCartTransactions(allTransactions);
       setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching unpaid cart transactions:', error);
       setLoading(false); // Set loading to false in case of error
     }
   };
+  
+// Inside the handleTransactionItemClick function
+const handleTransactionItemClick = async (transaction) => {
+  if (transaction.items && transaction.items.length > 0) {
+    // Non-empty cart, navigate to cart detail
+    navigate(`/cart-detail/${transaction.id}`);
+  } else {
+    // Empty cart, navigate to the exit link
+    window.location.href = `https://www.everything-intelligence.com/exit/`;
+    // Delete the empty cart transaction after navigating
+    try {
+      const db = getFirestore();
+      const emptyCartDocRef = doc(db, 'Users', user.uid, 'emptyCartTransactions', transaction.id);
+      await deleteDoc(emptyCartDocRef);
+      console.log('Empty cart transaction deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting empty cart transaction:', error);
+    }
+  }
+};
 
-  const handleTransactionItemClick = (cartItemId) => {
-    navigate(`/cart-detail/${cartItemId}`); // Use navigate to go to cart detail
-  };
+  
 
   const handleRefresh = () => {
     setLoading(true); // Set loading to true before fetching data
@@ -56,8 +89,14 @@ function CartView() {
         ) : (
           unpaidCartTransactions.length > 0 ? (
             unpaidCartTransactions.map(transaction => (
-              <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction.id)}>
-                <p style={cardTitleStyle}>🛒購物車ID: {transaction.custom_id}</p>
+              <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction)}>
+                <p style={cardTitleStyle}>
+                  {transaction.items && transaction.items.length > 0 ? (
+                    `🛒購物車ID: ${transaction.custom_id}`
+                  ) : (
+                    '🛒購物車ID: 空購物車'
+                  )}
+                </p>
                 {/* Render other relevant information */}
               </div>
             ))
