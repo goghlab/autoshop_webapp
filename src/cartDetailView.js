@@ -94,9 +94,8 @@ function CartDetailView() {
     // Append the referer to the checkout URL
     const checkoutURLWithReferer = `${checkoutURL}?referer=${encodeURIComponent(refererURL)}`;
   
-    // Open the checkout URL in a new window
-    window.open(checkoutURLWithReferer, '_blank');
-    console.log('Payment initiation successful.');
+    // Redirect to the checkout URL
+    window.location.href = checkoutURLWithReferer;
   };
   
   const initiatePaymentAndGetCheckoutURL = async () => {
@@ -156,16 +155,13 @@ function CartDetailView() {
       // Set referer URL
       const refererURL = 'https://autoshopwebapp.vercel.app/';
     
-      // Open the checkout URL in a new window with the referer header set
+      // Redirect to the checkout URL with the referer
       openCheckoutURLWithReferer(checkoutURL, refererURL);
     } catch (error) {
       console.error('Error handling payment:', error);
       throw error;
     }
   };
-  
-  
-  
   
   return (
     <div style={containerStyle}>
@@ -183,7 +179,6 @@ function CartDetailView() {
             ))}
           </div>
           <p style={{ ...detailStyle, marginTop: '20px' }}>總金額: {total !== null ? `HKD$ ${total}` : 'Calculating...'}</p>
-          {checkoutURL && <iframe src={checkoutURL} style={iframeStyle}></iframe>}
           <button style={payNowButtonStyle} onClick={handlePayNow}>立即支付</button>
           <br></br>
           <br></br>
@@ -265,12 +260,6 @@ const itemsContainerStyle = {
 
 const detailStyle = {
   marginBottom: '10px',
-};
-
-const iframeStyle = {
-  width: '100%',
-  height: '500px', // Adjust height as needed
-  border: 'none',
 };
 
 const payNowButtonStyle = {
