@@ -6,11 +6,11 @@ import logo from './777.png';
 import eiLogo from './eilogo.png'; // Import the image file
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const { user } = useAuth(); // Access user information from AuthContext  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { user } = useAuth(); // Access user information from AuthContext
 
   const auth = getAuth();
 
@@ -44,6 +44,11 @@ function Login() {
     cursor: 'pointer',
     fontSize: '16px',
     marginTop: '20px',
+  };
+
+  const phoneButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: '#34a853', // Different color for the phone login button
   };
 
   const containerStyle = {
@@ -105,18 +110,25 @@ function Login() {
       {/* Display error message if there's an error */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* Option to login with phone number */}
+      <button
+        style={phoneButtonStyle}
+        onClick={() => navigate('/phone-signin')} // Redirect to phone sign-in page
+      >
+        使用手機號碼登入
+      </button>
+
       {/* Link to sign up */}
       <p>還沒有帳戶?？ <Link to="/signup">立即註冊</Link></p>
 
       {/* Link to terms */}
       <Link to="/terms" style={{ fontSize: '15px', marginBottom: '10px', textDecoration: 'none' }}>*條款及細則</Link>
 
-       {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
-       <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE . 萬智科技 2024 All rights reserved</p>
+      {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
+      <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE . 萬智科技 2024 All rights reserved</p>
 
-   {/* Add the image with smaller size */}
-<img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
-
+      {/* Add the image with smaller size */}
+      <img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
     </div>
   );
 }

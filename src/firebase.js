@@ -1,7 +1,9 @@
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+// firebase.js
 import { initializeApp } from 'firebase/app';
-import { getAuth } from "firebase/auth";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCG5pVt5fXPgHUeqpsxbpTt702cg6leJKU",
   authDomain: "ei-website-103a4.firebaseapp.com",
@@ -13,10 +15,10 @@ const firebaseConfig = {
   measurementId: "G-HZQ5QYRXQX"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
-export { db, addDoc, collection };
+// Export services
+export { db, addDoc, collection, auth, RecaptchaVerifier, signInWithPhoneNumber, PhoneAuthProvider, signInWithCredential };

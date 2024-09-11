@@ -1,0 +1,54 @@
+/* PhoneSignIn.css */
+.phone-signin-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  .phone-signin-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .phone-signin-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .phone-signin-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .phone-signin-container button:disabled {
+    background-color: #6c757d;
+  }
+  
+  .phone-signin-container button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  .phone-signin-container .error {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .phone-signin-container .verification-section {
+    margin-top: 20px;
+  }
+  
