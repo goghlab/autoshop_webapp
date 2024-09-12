@@ -102,9 +102,7 @@ const PhoneSignIn = () => {
 
   return (
     <div className="phone-signin-container">
-      {/* Add the logo above the h2 */}
-      <img src={logo} alt="Logo" className="signin-logo" />
-
+      <div id="recaptcha-container"></div>
       <h2>手機登入</h2>
       <input
         type="text"
