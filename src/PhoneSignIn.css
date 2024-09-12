@@ -1,8 +1,17 @@
-/* PhoneSignIn.css */
-.phone-signin-container {
+/* To center the container vertically and horizontally */
+
+body, html {
+    height: 100%; /* Ensure the body and html take up the full height */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .phone-signin-container {
     max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%; /* Ensures responsiveness */
+    padding: 40px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
@@ -10,7 +19,7 @@
   }
   
   .phone-signin-container h2 {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     font-size: 24px;
     color: #333;
   }
@@ -18,7 +27,7 @@
   .phone-signin-container input {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin: 15px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
@@ -26,7 +35,8 @@
   
   .phone-signin-container button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    margin-top: 20px;
     border: none;
     border-radius: 4px;
     background-color: #007bff;
@@ -45,10 +55,33 @@
   
   .phone-signin-container .error {
     color: red;
-    margin-top: 10px;
+    margin-top: 15px;
   }
   
   .phone-signin-container .verification-section {
-    margin-top: 20px;
+    margin-top: 30px;
+  }
+  
+
+.signin-logo {
+    width: 150px; /* Adjust the size as needed */
+    height: auto;
+    margin-bottom: 20px; /* Space between the logo and the heading */
+  }
+  
+  .phone-signin-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  .phone-signin-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
   }
   

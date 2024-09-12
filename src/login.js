@@ -44,6 +44,7 @@ function Login() {
     cursor: 'pointer',
     fontSize: '16px',
     marginTop: '20px',
+    width: '300px', // Set consistent width for both buttons
   };
 
   const phoneButtonStyle = {

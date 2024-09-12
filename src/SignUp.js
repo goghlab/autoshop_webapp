@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 import logo from './777.png';
 import eiLogo from './eilogo.png'; // Import the image file
 
@@ -52,6 +52,12 @@ function SignUp({ onSignUpSuccess }) {
     cursor: 'pointer',
     fontSize: '16px',
     marginTop: '20px',
+    width: '300px', // Set consistent width for both buttons
+  };
+
+  const phoneButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: '#34a853', // Different color for the phone login button
   };
 
   const containerStyle = {
@@ -114,6 +120,14 @@ function SignUp({ onSignUpSuccess }) {
       {/* Display error message if there's an error */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* Option to sign up with phone number */}
+      <button
+        style={phoneButtonStyle}
+        onClick={() => navigate('/phone-signin')} // Redirect to phone sign-up page
+      >
+        使用手機號碼登入
+      </button>
+
       {/* Link to privacy policy */}
       <p>註冊即表示您同意我們的 <a href="https://www.everything-intelligence.com/privacy" target="_blank" rel="noopener noreferrer">隱私政策</a></p>
 
@@ -126,9 +140,8 @@ function SignUp({ onSignUpSuccess }) {
       {/* Line: POWERED by EVERYTHING INTELLIGENCE, 萬智科技 2024 All rights reserved */}
       <p style={{ fontSize: '13px' }}>POWERED by EVERYTHING INTELLIGENCE  萬智科技 2024 All rights reserved</p>
 
-{/* Add the image with smaller size */}
-<img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
-
+      {/* Add the image with smaller size */}
+      <img src={eiLogo} alt="EI Logo" style={{ width: '100px', height: 'auto' }} />
     </div>
   );
 }

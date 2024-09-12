@@ -3,6 +3,7 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from './firebase'; // Ensure this path is correct
 import './PhoneSignIn.css'; // Import the CSS file
+import logo from './777.png';
 
 const PhoneSignIn = () => {
   const [phoneNumber, setPhoneNumber] = useState('+852'); // Default to +852
@@ -101,7 +102,9 @@ const PhoneSignIn = () => {
 
   return (
     <div className="phone-signin-container">
-      <div id="recaptcha-container"></div>
+      {/* Add the logo above the h2 */}
+      <img src={logo} alt="Logo" className="signin-logo" />
+
       <h2>手機登入</h2>
       <input
         type="text"
