@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth } from './firebase'; // Ensure this path is correct
+import { auth, db } from './firebase'; // Ensure Firestore (db) is imported correctly
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 import './PhoneSignIn.css'; // Import the CSS file
 import logo from './777.png';
 
@@ -91,9 +92,21 @@ const PhoneSignIn = () => {
     }
 
     try {
-      await confirmationResult.confirm(verificationCode);
+      const result = await confirmationResult.confirm(verificationCode);
+      const user = result.user;
       alert('手機號碼驗證成功！');
-      navigate('/myqrcode'); // Redirect to MyQRCode page
+
+      // Add the new user to Firestore after authentication
+      await setDoc(doc(db, "Users", user.uid), {
+        phoneNumber: user.phoneNumber,
+        uid: user.uid,
+        createdAt: new Date().toISOString()
+      });
+
+      console.log('New user added to Firestore:', user.uid);
+
+      // Navigate to the MyQRCode page
+      navigate('/myqrcode');
     } catch (error) {
       console.error('Error verifying OTP:', error);
       setError(`驗證 OTP 失敗：${error.message}`);

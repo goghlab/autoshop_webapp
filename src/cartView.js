@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import { FaSync } from 'react-icons/fa'; // Import the refresh icon
-
+import { useNavigate } from 'react-router-dom'; 
+import { FaSync } from 'react-icons/fa'; 
 
 function CartView() {
-  const { user } = useAuth();
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const { user } = useAuth(); // Get the authenticated user
+  const navigate = useNavigate(); 
   const [unpaidCartTransactions, setUnpaidCartTransactions] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     if (user) {
@@ -28,53 +27,40 @@ function CartView() {
   
       const [cartSnapshot, emptyCartSnapshot] = await Promise.all([
         getDocs(cartQuery),
-        getDocs(emptyCartQuery)
+        getDocs(emptyCartQuery),
       ]);
   
-      const unpaidCartTransactions = cartSnapshot.docs.map(doc => ({
+      const unpaidCartTransactions = cartSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
   
-      const emptyCartTransactions = emptyCartSnapshot.docs.map(doc => ({
+      const emptyCartTransactions = emptyCartSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
   
-      const allTransactions = unpaidCartTransactions.concat(emptyCartTransactions);
+      // Set state with both unpaid and empty carts
+      setUnpaidCartTransactions(unpaidCartTransactions.concat(emptyCartTransactions));
+      setLoading(false);
   
-      setUnpaidCartTransactions(allTransactions);
-      setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching unpaid cart transactions:', error);
-      setLoading(false); // Set loading to false in case of error
+      setLoading(false);
     }
   };
-  
-// Inside the handleTransactionItemClick function
-const handleTransactionItemClick = async (transaction) => {
-  if (transaction.items && transaction.items.length > 0) {
-    // Non-empty cart, navigate to cart detail
-    navigate(`/cart-detail/${transaction.id}`);
-  } else {
-    // Empty cart, navigate to the exit link
-    window.location.href = `https://www.everything-intelligence.com/exit/`;
-    // Delete the empty cart transaction after navigating
-    try {
-      const db = getFirestore();
-      const emptyCartDocRef = doc(db, 'Users', user.uid, 'emptyCartTransactions', transaction.id);
-      await deleteDoc(emptyCartDocRef);
-      console.log('Empty cart transaction deleted successfully.');
-    } catch (error) {
-      console.error('Error deleting empty cart transaction:', error);
-    }
-  }
-};
 
-  
+  const handleTransactionItemClick = async (transaction) => {
+    if (transaction.items && transaction.items.length > 0) {
+      navigate(`/cart-detail/${transaction.id}`);
+    } else {
+      window.location.href = `https://www.everything-intelligence.com/exit/`;
+      // Optionally, handle empty cart transactions if needed
+    }
+  };
 
   const handleRefresh = () => {
-    setLoading(true); // Set loading to true before fetching data
+    setLoading(true); 
     if (user) {
       fetchUnpaidCartTransactions(user.uid);
     }
@@ -84,7 +70,7 @@ const handleTransactionItemClick = async (transaction) => {
     <div style={containerStyle}>
       <h5 style={titleStyle}>我的購物車</h5>
       <div style={transactionListStyle}>
-        {loading ? ( // Render loading animation if loading is true
+        {loading ? ( 
           <p>🛒購物車新增中...</p>
         ) : (
           unpaidCartTransactions.length > 0 ? (
@@ -97,7 +83,6 @@ const handleTransactionItemClick = async (transaction) => {
                     '🛒購物車ID: 空購物車'
                   )}
                 </p>
-                {/* Render other relevant information */}
               </div>
             ))
           ) : (
@@ -126,12 +111,6 @@ const titleStyle = {
   fontWeight: 'bold',
 };
 
-const captionStyle = {
-  marginBottom: '20px',
-  fontSize: '16px',
-  color: '#666',
-};
-
 const transactionListStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
@@ -152,8 +131,8 @@ const cardTitleStyle = {
 };
 
 const refreshButtonStyle = {
-  backgroundColor: '#007AFF', // Blue color
-  borderRadius: '50%', // Make the button round
+  backgroundColor: '#007AFF', 
+  borderRadius: '50%', 
   width: '40px',
   height: '40px',
   border: 'none',
@@ -163,7 +142,7 @@ const refreshButtonStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  color: 'white', // Set the color of the icon to white
+  color: 'white', 
 };
 
 export default CartView;
