@@ -52,30 +52,30 @@ function CartView() {
   };
 
   const handleTransactionItemClick = async (transaction) => {
+    const db = getFirestore();
+  
     if (transaction.isEmpty) {
-      // First, delete the empty cart item from Firestore
+      // Handle empty cart deletion
       try {
-        const db = getFirestore();
         await deleteDoc(doc(db, 'Users', user.uid, 'emptyCartTransactions', transaction.id));
         
-        // Now remove it from state
+        // Remove it from state
         setUnpaidCartTransactions((prevTransactions) =>
           prevTransactions.filter((t) => t.id !== transaction.id)
         );
-  
-        // Redirect to the external URL after deletion
+
+        // Redirect to an external URL
         window.location.href = `https://www.everything-intelligence.com/exit/?cart=${transaction.id}`;
         
       } catch (error) {
         console.error('Error deleting empty cart transaction:', error);
       }
     } else {
-      // Navigate to an external link for non-empty carts
-      window.location.href = `https://www.everything-intelligence.com/exit/?cart=${transaction.id}`;
+      // Navigate to CartDetailView for unpaid carts
+      navigate(`/cart-detail/${transaction.id}`);
     }
-  };
-  
-  
+};
+
 
   const handleRefresh = () => {
     setLoading(true); 
