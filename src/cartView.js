@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom'; 
 import { FaSync } from 'react-icons/fa'; 
@@ -37,6 +37,7 @@ function CartView() {
   
       const emptyCartTransactions = emptyCartSnapshot.docs.map((doc) => ({
         id: doc.id,
+        isEmpty: true, // Flag to differentiate empty carts
         ...doc.data(),
       }));
   
@@ -51,13 +52,30 @@ function CartView() {
   };
 
   const handleTransactionItemClick = async (transaction) => {
-    if (transaction.items && transaction.items.length > 0) {
-      navigate(`/cart-detail/${transaction.id}`);
+    if (transaction.isEmpty) {
+      // First, delete the empty cart item from Firestore
+      try {
+        const db = getFirestore();
+        await deleteDoc(doc(db, 'Users', user.uid, 'emptyCartTransactions', transaction.id));
+        
+        // Now remove it from state
+        setUnpaidCartTransactions((prevTransactions) =>
+          prevTransactions.filter((t) => t.id !== transaction.id)
+        );
+  
+        // Redirect to the external URL after deletion
+        window.location.href = `https://www.everything-intelligence.com/exit/?cart=${transaction.id}`;
+        
+      } catch (error) {
+        console.error('Error deleting empty cart transaction:', error);
+      }
     } else {
-      window.location.href = `https://www.everything-intelligence.com/exit/`;
-      // Optionally, handle empty cart transactions if needed
+      // Navigate to an external link for non-empty carts
+      window.location.href = `https://www.everything-intelligence.com/exit/?cart=${transaction.id}`;
     }
   };
+  
+  
 
   const handleRefresh = () => {
     setLoading(true); 
@@ -77,10 +95,10 @@ function CartView() {
             unpaidCartTransactions.map(transaction => (
               <div key={transaction.id} style={cardStyle} onClick={() => handleTransactionItemClick(transaction)}>
                 <p style={cardTitleStyle}>
-                  {transaction.items && transaction.items.length > 0 ? (
-                    `🛒購物車ID: ${transaction.custom_id}`
-                  ) : (
+                  {transaction.isEmpty ? (
                     '🛒購物車ID: 空購物車'
+                  ) : (
+                    `🛒購物車ID: ${transaction.custom_id}`
                   )}
                 </p>
               </div>
